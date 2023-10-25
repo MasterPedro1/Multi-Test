@@ -2,20 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player_Controller : MonoBehaviour
+public class Player_Controller : FSM
 {
-
     public float velocidadMovimiento = 5f; // Velocidad de movimiento del jugador
     public float fuerzaSalto = 10f; // Fuerza de salto
     private bool enSuelo = false; // Verificar si el jugador está en el suelo
     private Rigidbody2D rb;
 
-    void Start()
+    protected override void initialize()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    protected override void FSMUpdate()
     {
         // Mover el jugador
         MoverJugador();
