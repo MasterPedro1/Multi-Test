@@ -8,6 +8,7 @@ public class Player_Controller : FSM
     public float fuerzaSalto = 10f; // Fuerza de salto
     private bool enSuelo = false; // Verificar si el jugador está en el suelo
     private Rigidbody2D rb;
+    private bool isLocalPlayer = true;
 
     protected override void initialize()
     {
@@ -16,13 +17,21 @@ public class Player_Controller : FSM
 
     protected override void FSMUpdate()
     {
-        // Mover el jugador
-        MoverJugador();
-
-        // Saltar si se presiona la tecla de espacio y el jugador está en el suelo
-        if (enSuelo && Input.GetKeyDown(KeyCode.Space))
+        if (!isLocalPlayer)
         {
-            Saltar();
+            return;
+        }
+
+        else
+        { 
+            // Mover el jugador
+            MoverJugador();
+
+            // Saltar si se presiona la tecla de espacio y el jugador está en el suelo
+            if (enSuelo && Input.GetKeyDown(KeyCode.Space))
+            {
+                Saltar();
+            }
         }
     }
 
