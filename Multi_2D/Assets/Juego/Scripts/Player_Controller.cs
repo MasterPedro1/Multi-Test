@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player_Controller : FSM
 {
@@ -9,11 +10,23 @@ public class Player_Controller : FSM
     private bool enSuelo = false; // Verificar si el jugador está en el suelo
     private Rigidbody2D rb;
     private bool isLocalPlayer = true;
+    public Animator animator;
+    private bool isWalking = false;
+    public Slider health;
+    private float vida = 100;
+
+
+    private void Update()
+    {
+        health.value = vida;
+    }
 
     protected override void initialize()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent <Rigidbody2D>();
+        
     }
+
 
     protected override void FSMUpdate()
     {
@@ -23,7 +36,8 @@ public class Player_Controller : FSM
         }
 
         else
-        { 
+        {
+            
             // Mover el jugador
             MoverJugador();
 
@@ -31,6 +45,12 @@ public class Player_Controller : FSM
             if (enSuelo && Input.GetKeyDown(KeyCode.Space))
             {
                 Saltar();
+                animator.Play("Jump");
+            }
+
+            if(!enSuelo)
+            {
+                animator.Play("Jump");
             }
         }
     }
@@ -42,6 +62,9 @@ public class Player_Controller : FSM
         {
             enSuelo = true;
         }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemigo"))
+            vida = vida - 10;
     }
 
     void OnCollisionExit2D(Collision2D collision)
@@ -55,10 +78,14 @@ public class Player_Controller : FSM
 
     void MoverJugador()
     {
+        
         float movimientoHorizontal = Input.GetAxis("Horizontal");
         Vector2 velocidad = rb.velocity;
         velocidad.x = movimientoHorizontal * velocidadMovimiento;
         rb.velocity = velocidad;
+        if (movimientoHorizontal != 0)
+            animator.Play("Walk");
+      
     }
 
     void Saltar()
